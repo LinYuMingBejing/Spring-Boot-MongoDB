@@ -3,6 +3,7 @@ package com.items.api.repo;
 
 import com.items.api.entity.BookInfo;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public interface BookRepository extends MongoRepository<BookInfo, ObjectId> {
     List<BookInfo> findByAuthor(String author);
 
     @Query("{'price':{'$gte':?0, '$lte': ?1}}")
-    List<BookInfo> findByPrice(int p1, int p2);
+    List<BookInfo> findByPrice(int p1, int p2, Pageable pageable);
 
     @Query("{'published_date':{'$gte':?0, '$lte': ?1}}")
     List<BookInfo> findByDate(LocalDate startDay, LocalDate endDate);

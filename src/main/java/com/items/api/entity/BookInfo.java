@@ -2,8 +2,10 @@ package com.items.api.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document(collection="bookinfo")
-public class BookInfo {
+public class BookInfo implements Serializable {
 
     private String title;
     private String page_url;

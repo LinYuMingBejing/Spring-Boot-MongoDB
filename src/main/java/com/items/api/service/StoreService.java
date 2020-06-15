@@ -3,10 +3,11 @@ package com.items.api.service;
 import com.items.api.entity.BookInfo;
 import com.items.api.pojo.AuthorBooks;
 import com.items.api.pojo.BookDateResponse;
-import com.items.api.pojo.BookPrice;
+import com.items.api.pojo.BookPriceResponse;
 import com.items.api.repo.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,12 +24,14 @@ public class StoreService {
     private BookRepository bookRepository;
 
     @Cacheable("Book")
-    public BookPrice findPriceByTitle(String title){
+    public BookPriceResponse findPriceByTitle(String title){
         BookInfo book = bookRepository.findByTitle(title);
-        BookPrice bookPrice = new BookPrice();
-        bookPrice.setPrice(book.getPrice());
-        bookPrice.setTitle(book.getTitle());
-        return bookPrice;
+        BookPriceResponse bookPriceResponse = new BookPriceResponse();
+        Map<String,Integer> PriceMap =  new HashMap<>();
+        PriceMap.put(title, book.getPrice());
+        System.out.println(PriceMap);
+        System.out.println("---->");
+        return bookPriceResponse.data(PriceMap);
     }
 
     @Cacheable("Author")
@@ -42,16 +45,16 @@ public class StoreService {
     }
 
     @Cacheable("Price")
-    public List<HashMap<String,Object>> findBookByPrice(int p1, int p2){
-        List<BookInfo> books = bookRepository.findByPrice(p1,p2);
-        System.out.println(books);
-        Map bookMap = new HashMap();
-        List reusltList = new ArrayList<>();
-        for(BookInfo book : books){
-            bookMap.put(book.getTitle(),book.getPrice());
-            reusltList.add(bookMap);
+    public BookPriceResponse findBookByPrice(int p1, int p2){
+        BookPriceResponse response = new BookPriceResponse<>();
+        if (p1>p2){
+            response.setStatus(false);
+            response.setMsg("錯誤:起始價格大於最終價格");
+            return response;
         }
-        return reusltList;
+        List<BookInfo> books = bookRepository.findByPrice(p1,p2, PageRequest.of(0, 100));
+        response.setData(books);
+        return response;
     }
 
     @Cacheable("Date")
@@ -61,7 +64,7 @@ public class StoreService {
         BookDateResponse response = new BookDateResponse();
         if (start_date.isAfter(end_date)){
             response.setStatus(false);
-            response.setMsg("起始日期大於結束日期");
+            response.setMsg("錯誤:起始日期大於結束日期");
             return response;
         }
         List<BookInfo> books = bookRepository.findByDate(start_date, end_date);

@@ -3,11 +3,12 @@ package com.items.api.pojo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.items.api.entity.BookInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
 // 轉JSON時排除全部值為null的屬性
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BookDateResponse {
+public class BookDateResponse implements Serializable {
     private List<BookInfo> data;
     private boolean status;
     String msg = null;
