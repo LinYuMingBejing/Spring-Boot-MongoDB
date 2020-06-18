@@ -29,8 +29,6 @@ public class StoreService {
         BookPriceResponse bookPriceResponse = new BookPriceResponse();
         Map<String,Integer> PriceMap =  new HashMap<>();
         PriceMap.put(title, book.getPrice());
-        System.out.println(PriceMap);
-        System.out.println("---->");
         return bookPriceResponse.data(PriceMap);
     }
 
@@ -71,5 +69,22 @@ public class StoreService {
         response.setData(books);
         response.setStatus(true);
         return response;
+    }
+
+    public void updateBooks(BookInfo books){
+        String title = books.getTitle();
+        BookInfo bookInfo = bookRepository.findByTitle(title);
+        if (bookInfo == null){
+            bookInfo = new BookInfo();
+            bookInfo.setTitle(title);
+        }
+        bookInfo.setAuthor(books.getAuthor());
+        bookInfo.setDescription(books.getDescription());
+        bookInfo.setOrigin_price(books.getOrigin_price());
+        bookInfo.setPage_url(books.getPage_url());
+        bookInfo.setPrice(books.getPrice());
+        bookInfo.setPublished_date(books.getPublished_date());
+        bookInfo.setTitle(books.getTitle());
+        bookRepository.save(bookInfo);
     }
 }

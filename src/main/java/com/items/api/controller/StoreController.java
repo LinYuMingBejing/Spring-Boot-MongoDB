@@ -1,17 +1,12 @@
 package com.items.api.controller;
 
-
-import com.items.api.pojo.AuthorBooks;
-import com.items.api.pojo.AuthorBooksResponse;
-import com.items.api.pojo.BookDateResponse;
-import com.items.api.pojo.BookPriceResponse;
+import com.items.api.entity.BookInfo;
+import com.items.api.pojo.*;
 import com.items.api.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.Callable;
 
@@ -55,4 +50,17 @@ public class StoreController {
             return storeService.findBookByDate(startDate, endDate);
         };
     }
+
+    @ResponseBody
+    @PostMapping("insert")
+    Callable<BookDateResponse> updateBooks(@RequestBody BookInfo bookInfo){
+        return ()->{
+            storeService.updateBooks(bookInfo);
+            BookDateResponse bookDateResponse = new BookDateResponse();
+            bookDateResponse.setStatus(true);
+            bookDateResponse.setMsg("success");
+            return bookDateResponse;
+        };
+    }
+
 }

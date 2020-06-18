@@ -19,7 +19,8 @@ services:
 
   web:
     container_name: web
-    image: spring-boot-mongodb:latest
+    image: demo:latest
+
     volumes:
       - ./config:/config
       - ./log:/log

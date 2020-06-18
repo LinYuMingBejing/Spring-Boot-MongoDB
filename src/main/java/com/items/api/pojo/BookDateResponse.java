@@ -16,11 +16,6 @@ public class BookDateResponse implements Serializable {
     public BookDateResponse() {
     }
 
-    public BookDateResponse(List<BookInfo> data, boolean status) {
-        this.data = data;
-        this.status = status;
-    }
-
     public String getMsg() {
         return msg;
     }
